@@ -1,0 +1,16 @@
+using UnityEngine;
+
+namespace #SCRIPTNAME#Namespace
+{
+    /// <summary>
+    /// This script does stuff.
+    /// 
+    /// <para>Created by Author, Month 202X.</para>
+    /// </summary>
+    public class #SCRIPTNAME# : MonoBehaviour
+    {
+        [SerializeField] private bool debug;
+  #NOTRIM#
+  #NOTRIM#
+    }
+}
