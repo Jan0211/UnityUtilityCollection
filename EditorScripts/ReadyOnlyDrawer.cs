@@ -2,7 +2,7 @@ using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityTools.EditorScripts
+namespace UUC.EditorScripts
 {
     /// <summary>
     /// This class contains custom drawer for a ReadOnly attribute.

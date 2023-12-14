@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnityTools.InitializationHandling
+namespace UUC.InitializationHandling
 {
     public abstract class Initializable : MonoBehaviour
     {

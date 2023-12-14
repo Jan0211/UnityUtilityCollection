@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityTools.General
+namespace UUC.General
 {
     /// <summary>
     /// Inherit from this class to create a simple singleton

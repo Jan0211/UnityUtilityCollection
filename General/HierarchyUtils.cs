@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityTools.General
+namespace UUC.General
 {
     public static class HierarchyUtils
     {

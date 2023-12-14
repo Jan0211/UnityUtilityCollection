@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace UnityTools.EditorScripts
+namespace UUC.EditorScripts
 {
     public static class DebugGlobalPosition
     {
