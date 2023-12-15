@@ -17,61 +17,92 @@ namespace UUC.TransformUtilities
         
         [Tooltip("The (world space) axis along which the object moves.")]
         [SerializeField] private Vector3 levitationAxis = Vector3.up;
+        
 
-        private Vector3 _initialLocalPosition;
-        private Vector3 _localLevitationAxis;
+        private Vector3 _initialPosition;
 
-        private Vector3 _localMin;
-        private Vector3 _localMax;
+        private Vector3 _minPos;
+        private Vector3 _maxPos;
         
         private float _levitationSpeed;
 
         private bool _movingUp = true;
-
-        private void OnEnable()
+        
+        
+    #region Public Update Methods
+        public void UpdateLevitationRange(float newRange) 
         {
+            levitationRange = newRange;
+            ResetSettings();
+        }
+        
+        public void UpdateLevitationFrequency(float newFrequency) 
+        {
+            levitationFrequency = newFrequency;
+            ResetSettings();
+        }
+
+        public void UpdateLevitationAxis(Vector3 newAxis)
+        {
+            levitationAxis = newAxis;
+            ResetSettings();
+        }
+    #endregion
+
+        private void ResetSettings()
+        {
+            _initialPosition = transform.position;
+            
             levitationRange = Mathf.Abs(levitationRange);
+            levitationAxis.Normalize();
 
-            Transform objectTransform = transform;
-            _localLevitationAxis = objectTransform.InverseTransformVector(levitationAxis.normalized);
-            _initialLocalPosition = objectTransform.localPosition;
-
-            _localMin = _initialLocalPosition;
-            _localMax = _initialLocalPosition + levitationRange * _localLevitationAxis;
+            _minPos = _initialPosition;
+            _maxPos = _initialPosition + levitationRange * levitationAxis;
 
             if (levitationFrequency != 0)
                 _levitationSpeed = 2 * levitationRange / levitationFrequency;
         }
+        
+        private void OnEnable()
+        {
+            ResetSettings();
+        }
 
         private void OnDisable()
         {
-            transform.localPosition = _localMin;
+            transform.position = _initialPosition;
         }
 
         private void FixedUpdate()
         {
             // todo: change velocity over time so it's not linear anymore and slowly comes to a stop
             
-            transform.localPosition += Time.fixedDeltaTime * _levitationSpeed * (_movingUp ? 1 : -1) * _localLevitationAxis;
-            Vector3 localPosition = transform.localPosition;
+            transform.position += Time.fixedDeltaTime * _levitationSpeed * (_movingUp ? 1 : -1) * levitationAxis;
+            Vector3 position = transform.position;
             
-            if (_movingUp && Vector3.Dot(_localMax - localPosition, _localLevitationAxis) <= 0)
+            if (_movingUp && Vector3.Dot(_maxPos - position, levitationAxis) <= 0)
             {
                 _movingUp = !_movingUp;
-                transform.localPosition = _localMax;
+                transform.position = _maxPos;
             }
-            else if (!_movingUp && Vector3.Dot(_localMin - localPosition, _localLevitationAxis) >= 0)
+            else if (!_movingUp && Vector3.Dot(_minPos - position, levitationAxis) >= 0)
             {
                 _movingUp = !_movingUp;
-                transform.localPosition = _localMin;
+                transform.position = _minPos;
             }
         }
 
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;
-            Vector3 position = transform.position;
-            Gizmos.DrawLine(position, position + levitationRange * levitationAxis.normalized);
+            
+            if (Application.isPlaying)
+                Gizmos.DrawLine(_initialPosition, _initialPosition + levitationRange * levitationAxis.normalized);
+            else
+            {
+                Vector3 position = transform.position;
+                Gizmos.DrawLine(position, position + levitationRange * levitationAxis.normalized);
+            }
         }
     }
 }
