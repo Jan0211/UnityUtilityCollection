@@ -17,6 +17,9 @@ namespace UUC.TransformUtilities
         
         [Tooltip("The (world space) axis along which the object moves.")]
         [SerializeField] private Vector3 levitationAxis = Vector3.up;
+
+        [Tooltip("If true, a red line is drawn in the editor from minimum to maximum levitation position.")]
+        [SerializeField] private bool debugDrawLevitation;
         
 
         private Vector3 _initialPosition;
@@ -94,6 +97,9 @@ namespace UUC.TransformUtilities
 
         private void OnDrawGizmosSelected()
         {
+            if (!isActiveAndEnabled || !debugDrawLevitation)
+                return;
+            
             Gizmos.color = Color.red;
             
             if (Application.isPlaying)
